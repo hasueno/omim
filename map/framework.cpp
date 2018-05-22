@@ -366,7 +366,7 @@ Framework::Framework(FrameworkParams const & params)
             },
             [this]() -> StringsBundle const & { return m_stringsBundle; }),
         static_cast<RoutingManager::Delegate &>(*this))
-  , m_extrapolator([this](location::GpsInfo & gpsInfo) {
+  , m_extrapolator([this](location::GpsInfo const & gpsInfo) {
     this->GetRoutingManager().OnLocationUpdate(gpsInfo);
   })
   , m_trafficManager(bind(&Framework::GetMwmsByRect, this, _1, false /* rough */),
@@ -496,7 +496,6 @@ Framework::~Framework()
 
   GetBookmarkManager().Teardown();
   m_trafficManager.Teardown();
-  m_extrapolator.Cancel();
   DestroyDrapeEngine();
   m_model.SetOnMapDeregisteredCallback(nullptr);
 
